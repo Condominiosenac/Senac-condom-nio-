@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livro de Ocorrências Online</title>
+    <link rel="stylesheet" href="styles.css">
+    <style type="text/css" id="dcoder_stylesheet">
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .admin-panel, .success-message, .error-message {
+            display: none;
+        }
+        .success-message {
+            color: green;
+        }
+        .error-message {
+            color: red;
+        }
+        .occurrence {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #registrationForm {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cadastro de Usuários</h1>
+    <form id="registrationForm">
+        <label for="fullName">Nome Completo:</label>
+        <input type="text" id="fullName" name="fullName" required>
+
+        <label for="registerEmail">E-mail:</label>
+        <input type="email" id="registerEmail" name="registerEmail" required>
+
+        <label for="registerPassword">Senha:</label>
+        <input type="password" id="registerPassword" name="registerPassword" required>
+
+        <label for="address">Endereço:</label>
+        <input type="text" id="address" name="address" required>
+
+        <label for="role">Função:</label>
+        <select id="roleSelect" name="role" required onchange="showAdditionalFields()">
+            <option value="administrador">Administrador</option>
+            <option value="residente">Residente</option>
+            <option value="funcionario">Funcionário</option>
+        </select>
+
+        <div id="residentFields" style="display:none;">
+            <label for="apartmentNumber">Número do Apartamento:</label>
+            <input type="text" id="apartmentNumber" name="apartmentNumber">
+        </div>
+
+        <div id="employeeFields" style="display:none;">
+            <label for="department">Departamento:</label>
+            <input type="text" id="department" name="department">
+        </div>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h1>Login</h1>
+    <form id="loginForm">
+        <label for="loginEmail">E-mail:</label>
+        <input type="email" id="loginEmail" name="loginEmail" required>
+
+        <label for="loginPassword">Senha:</label>
+        <input type="password" id="loginPassword" name="loginPassword" required>
+
+        <button type="submit">Entrar</button>
+    </form>
+
+    <h1>Área do Condômino</h1>
+    <form id="occurrenceForm" style="display:none;">
+        <label for="name">Nome Completo:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Telefone:</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <label for="role">Quem é você?</label>
+        <select id="role" name="role" required>
+            <option value="morador">Morador</option>
+            <option value="visitante">Visitante</option>
+            <option value="funcionario">Funcionário</option>
+        </select>
+
+        <label for="userName">Digite seu nome:</label>
+        <input type="text" id="userName" name="userName" required>
+
+        <label for="condominium">Nome do Condomínio:</label>
+        <input type="text" id="condominium" name="condominium" required>
+
+        <label for="apartment">Número do Apartamento:</label>
+        <input type="text" id="apartment" name="apartment" required>
+
+        <label for="location">Localização da Ocorrência:</label>
+        <input type="text" id="location" name="location" placeholder="Ex.: Área comum, Estacionamento">
+
+        <label for="date">Data da Ocorrência:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="time">Hora da Ocorrência:</label>
+        <input type="time" id="time" name="time" required>
+
+        <label for="type">Tipo de Ocorrência:</label>
+        <select id="type" name="type" required>
+            <option value="reclamacao">Reclamação</option>
+            <option value="sugestao">Sugestão</option>
+            <option value="elogio">Elogio</option>
+            <option value="incidente">Incidente</option>
+            <option value="outro">Outro</option>
+        </select>
+
+        <label for="urgency">Urgência:</label>
+        <select id="urgency" name="urgency" required>
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+        </select>
+
+        <label for="description">Descrição da Ocorrência:</label>
+        <textarea id="description" name="description" rows="5" required></textarea>
+
+        <button type="submit">Enviar</button>
+        <div class="success-message">
+            Ocorrência enviada com sucesso!
+        </div>
+        <div class="error-message">
+            Erro ao enviar a ocorrência. Tente novamente.
+        </div>
+    </form>
+
+    <h1>Área do Administrador</h1>
+    <form id="adminLoginForm">
+        <label for="adminEmail">E-mail:</label>
+        <input type="email" id="adminEmail" name="adminEmail" required>
+
+        <label for="adminPassword">Senha:</label>
+        <input type="password" id="adminPassword" name="adminPassword" required>
+
+        <button type="submit">Entrar como Administrador</button>
+    </form>
+
+    <div id="adminPanel" class="admin-panel" style="display:none;">
+        <h2>Gerenciar Ocorrências</h2>
+        <button onclick="loadOccurrences()">Mostrar Ocorrências</button>
+        <div id="occurrencesList" style="display:none;"></div>
+
+        <h2>Novos Usuários</h2>
+        <div id="newUsersList"></div>
+
+        <!-- Campo de pesquisa -->
+        <input type="text" id="searchField" placeholder="Buscar ocorrências...">
+        <button onclick="searchOccurrences()">Pesquisar</button>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script type="text/javascript" id="dcoder_script">
+        document.addEventListener('DOMContentLoaded', () => {
+            const adminCredentials = [{
+                email: "lidianyalves19@gmail.com", password: "132819"
+            },
+                {
+                    email: "outroadmin@example.com", password: "outrasenha"
+                }];
+
+            // Lista de ocorrências
+            let occurrencesList = [{
+                id: 1, text: "Ocorrência 1: Barulho excessivo às 22h.", status: "pendente", comments: []
+            },
+                {
+                    id: 2, text: "Ocorrência 2: Vazamento no apartamento 305.", status: "pendente", comments: []
+                },
+            ];
+
+            // Lista de usuários cadastrados
+            let registeredUsers = [];
+
+            // Função para mostrar campos adicionais com base na função selecionada
+            window.showAdditionalFields = function() {
+                const role = document.getElementById('roleSelect').value;
+                document.getElementById('residentFields').style.display = (role === 'residente') ? 'block': 'none';
+                document.getElementById('employeeFields').style.display = (role === 'funcionario') ? 'block': 'none';
+            };
+
+            // Envio do Formulário de Cadastro
+            document.getElementById('registrationForm').onsubmit = function(event) {
+                event.preventDefault();
+
+                const newUser = {
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('registerEmail').value,
+                    password: document.getElementById('registerPassword').value,
+                    address: document.getElementById('address').value,
+                    role: document.getElementById('roleSelect').value,
+                    apartmentNumber: document.getElementById('apartmentNumber').value,
+                    department: document.getElementById('department').value,
+                    approved: false
+                };
+
+                registeredUsers.push(newUser);
+                alert('Cadastro realizado! Aguardando aprovação.');
+                document.getElementById('registrationForm').reset();
+            };
+
+            // Login do Usuário
+            document.getElementById('loginForm').onsubmit = function(event) {
+                event.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                if (email && password) {
+                    document.getElementById('occurrenceForm').style.display = 'block';
+                    document.getElementById('loginForm').style.display = 'none';
+                } else {
+                    alert('Por favor, insira e-mail e senha válidos.');
+                }
+            };
+
+            // Envio de Ocorrência
+            document.getElementById('occurrenceForm').onsubmit = async function(event) {
+                event.preventDefault();
+                const successMessage = document.querySelector('.success-message');
+                const errorMessage = document.querySelector('.error-message');
+
+                const occurrenceData = {
+                    id: occurrencesList.length + 1,
+                    text: document.getElementById('description').value,
+                    status: "pendente",
+                    comments: []
+                };
+
+                occurrencesList.push(occurrenceData);
+
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                document.getElementById('occurrenceForm').reset();
+            };
+
+            // Login do Administrador
+            document.getElementById('adminLoginForm').onsubmit = async function(event) {
+                event.preventDefault();
+                const email = document.getElementById('adminEmail').value;
+                const password = document.getElementById('adminPassword').value;
+
+                const admin = adminCredentials.find(admin => admin.email === email && admin.password === password);
+
+                if (admin) {
+                    document.getElementById('adminPanel').style.display = 'block';
+                    document.getElementById('adminLoginForm').style.display = 'none';
+                    loadOccurrences();
+                    loadNewUsers();
+                } else {
+                    alert('Login do administrador falhou! Verifique suas credenciais.');
+                }
+            };
+
+            // Carregar Ocorrências
+            window.loadOccurrences = function() {
+                const occurrencesDiv = document.getElementById('occurrencesList');
+                occurrencesDiv.innerHTML = '';
+                occurrencesDiv.style.display = 'block';
+
+                occurrencesList.forEach(occurrence => {
+                    const occurrenceDiv = document.createElement('div');
+                    occurrenceDiv.className = 'occurrence';
+                    occurrenceDiv.innerHTML = `
+                    <p>${occurrence.text}</p>
+                    <button onclick="approveOccurrence(${occurrence.id})">Aceitar</button>
+                    <button onclick="rejectOccurrence(${occurrence.id})">Rejeitar</button>
+                    <button onclick="respondToOccurrence(${occurrence.id})">Responder</button>
+                    <div id="response-${occurrence.id}" style="display:none;">
+                    <textarea placeholder="Escreva sua resposta aqui..."></textarea>
+                    <button onclick="submitResponse(${occurrence.id})">Enviar Resposta</button>
+                    </div>
+                    `;
+                    occurrencesDiv.appendChild(occurrenceDiv);
+                });
+            };
+
+            // Carregar Novos Usuários
+            window.loadNewUsers = function() {
+                const newUsersDiv = document.getElementById('newUsersList');
+                newUsersDiv.innerHTML = '';
+
+                registeredUsers.forEach((user, index) => {
+                    if (!user.approved) {
+                        const userDiv = document.createElement('div');
+                        userDiv.innerHTML = `
+                        <p>Nome: ${user.fullName}</p>
+                        <p>Email: ${user.email}</p>
+                        <p>Endereço: ${user.address}</p>
+                        <p>Função: ${user.role}</p>
+                        ${user.role === 'residente' ? `<p>Apartamento: ${user.apartmentNumber}</p>`: ''}
+                        ${user.role === 'funcionario' ? `<p>Departamento: ${user.department}</p>`: ''}
+                        <button onclick="approveUser(${index})">Aprovar</button>
+                        <button onclick="rejectUser(${index})">Rejeitar</button>
+                        <hr>
+                        `;
+                        newUsersDiv.appendChild(userDiv);
+                    }
+                });
+            };
+
+            // Aprovar Usuário
+            window.approveUser = function(index) {
+                registeredUsers[index].approved = true;
+                alert('Usuário aprovado!');
+                loadNewUsers();
+            };
+
+            // Rejeitar Usuário
+            window.rejectUser = function(index) {
+                registeredUsers.splice(index,
+                    1);
+                alert('Usuário rejeitado!');
+                loadNewUsers();
+            };
+
+            // Aprovar Ocorrência
+            window.approveOccurrence = function(id) {
+                const occurrence = occurrencesList.find(o => o.id === id);
+                occurrence.status = 'aprovada';
+                alert('Ocorrência aprovada!');
+                loadOccurrences();
+            };
+
+            // Rejeitar Ocorrência
+            window.rejectOccurrence = function(id) {
+                const occurrence = occurrencesList.find(o => o.id === id);
+                occurrence.status = 'rejeitada';
+                alert('Ocorrência rejeitada!');
+                loadOccurrences();
+            };
+
+            // Responder Ocorrência
+            window.respondToOccurrence = function(id) {
+                const responseDiv = document.getElementById(`response-${id}`);
+                responseDiv.style.display = 'block';
+            };
+
+            // Enviar Resposta
+            window.submitResponse = function(id) {
+                const responseDiv = document.getElementById(`response-${id}`);
+                const textarea = responseDiv.querySelector('textarea');
+                const responseText = textarea.value;
+
+                if (responseText) {
+                    const occurrence = occurrencesList.find(o => o.id === id);
+                    occurrence.comments.push(responseText);
+                    alert('Resposta enviada!');
+                    responseDiv.style.display = 'none';
+                } else {
+                    alert('Por favor, escreva uma resposta.');
+                }
+            };
+
+            // Pesquisar Ocorrências
+            window.searchOccurrences = function() {
+                const query = document.getElementById('searchField').value.toLowerCase();
+                const filtered = occurrencesList.filter(o => o.text.toLowerCase().includes(query));
+                const occurrencesDiv = document.getElementById('occurrencesList');
+                occurrencesDiv.innerHTML = '';
+                filtered.forEach(occurrence => {
+                    const occurrenceDiv = document.createElement('div');
+                    occurrenceDiv.className = 'occurrence';
+                    occurrenceDiv.innerHTML = `
+                    <p>${occurrence.text}</p>
+                    <button onclick="approveOccurrence(${occurrence.id})">Aceitar</button>
+                    <button onclick="rejectOccurrence(${occurrence.id})">Rejeitar</button>
+                    <button onclick="respondToOccurrence(${occurrence.id})">Responder</button>
+                    <div id="response-${occurrence.id}" style="display:none;">
+                    <textarea placeholder="Escreva sua resposta aqui..."></textarea>
+                    <button onclick="submitResponse(${occurrence.id})">Enviar Resposta</button>
+                    </div>
+                    `;
+                    occurrencesDiv.appendChild(occurrenceDiv);
+                });
+                if (filtered.length === 0) {
+                    occurrencesDiv.innerHTML = '<p>Nenhuma ocorrência encontrada.</p>';
+                }
+            };
+        });
+    </script>
+</body>
+</html>
